@@ -80,7 +80,11 @@ let airportData = "https://raw.githubusercontent.com/leah-braswell/Mapping_Earth
 d3.json(airportData).then(function(data) {
     console.log(data);
     //create a GeoJSON layer with retrieved data
-    L.geoJson(data).addTo(map);
+    L.geoJson(data, {
+        onEachFeature: function(feature, layer) {
+            layer.bindPopup("<h2>Airport Code: "+ feature.properties.faa + "</h2> <hr> <h3>Airport Name: "+ feature.properties.name + "</h3>");
+        }
+    }).addTo(map);
 });
 
 // Then we add our 'graymap' tile layer to the map.

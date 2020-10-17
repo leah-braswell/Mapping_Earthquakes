@@ -28,16 +28,14 @@ let baseMaps = {
   "Satellite": satelliteStreets
 };
 
-// 1. Add a 2nd layer group for the tectonic plate data.
+// 1. Add a 3rd layer group for the major earthquake data.
 let allEarthquakes = new L.LayerGroup();
-let tectonicPlates = new L.LayerGroup();
-let majorEQ = new L.LayerGroup();
 
-// 2. Add a reference to the tectonic plates group to the overlays object.
+
+// 2. Add a reference to the major earthquake group to the overlays object.
 let overlays = {
   "Earthquakes": allEarthquakes,
-  "Tectonic Plates": tectonicPlates,
-  "Major Earthquakes": majorEQ
+
 };
 
 // Then we add a control to the map that will allow the user to change which
@@ -109,7 +107,6 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
 
   // Then we add the earthquake layer to our map.
   allEarthquakes.addTo(map);
-});
 
 // 3. Retrieve the major earthquake GeoJSON data >4.5 mag for the week.
 let majorEQData = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/4.5_week.geojson";
@@ -155,22 +152,22 @@ d3.json(majorEQData).then(function(data) {
 //  after the marker has been created and styled.
 L.geoJson(data, {
   pointToLayer: function(feature, latlng){
-    return L.circleMarker(latlng);
+    return L.circleMarker();
   },
   style: majorStyle,
   onEachFeature: function(feature, layer) {
     layer.bindPopup("Magnitude: " + feature.properties.mag + "<br>Location: " + feature.properties.place);
-    } 
-  }).addTo(majorEQ);
+  }
+}).addTo(majorEQ);
 // 8. Add the major earthquakes layer to the map.
 majorEQ.addTo(map);
 // 9. Close the braces and parentheses for the major earthquake data.
 });
 
-
-  // Here we create a legend control object.
+// Here we create a legend control object.
 let legend = L.control({
   position: "bottomright"
+
 });
 
 // Then add all the details for the legend
@@ -200,6 +197,7 @@ legend.onAdd = function() {
   // Finally, we our legend to the map.
   legend.addTo(map);
 
+
   //create a style for the lines
   let myStyle = {
     color: "#ff0000",
@@ -216,3 +214,4 @@ legend.onAdd = function() {
     }).addTo(tectonicPlates);
     tectonicPlates.addTo(map);
   });
+});

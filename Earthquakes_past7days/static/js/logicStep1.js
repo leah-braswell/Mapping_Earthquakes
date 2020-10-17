@@ -44,7 +44,7 @@ let baseMaps = {
 
 //create teh map object with center on geo center of US, zoom level 3, and streets default layer.
 let map = L.map('mapid', {
-    center: [4439.5, -98.5],
+    center: [39.5, -98.5],
     zoom: 3,
     layers: [streets]
 });

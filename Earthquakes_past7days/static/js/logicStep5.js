@@ -30,6 +30,20 @@ let map = L.map('mapid', {
 });
 
 
+//Create teh earthquake layer for our map
+let earthquakes = new L.layerGroup();
+
+//define an object that contains the overlays.
+//this overlay will be visible all the time
+let overlays = {
+    Earthquakes: earthquakes
+};
+
+//add a control to the map to allow user to change layers
+L.control.layers(baseMaps, overlays).addTo(map);
+
+
+
 // This function returns the style data for each of the earthquakes we plot on
 // the map. We pass the magnitude of the earthquake into two separate functions
 // to calculate the color and radius.
@@ -89,6 +103,36 @@ d3.json("https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/all_week.geoj
     onEachFeature: function(feature, layer) {
         layer.bindPopup("Magnitude: "+feature.properties.mag+ "<br>Location: "+feature.properties.place);
     }
-    }).addTo(map);
+    }).addTo(earthquakes);
+    //add the earthquakes layer to the map
+    earthquakes.addTo(map);
 });
 
+//add custom legend control
+let legend = L.control({position: 'bottomright'});
+
+legend.onAdd = function () {
+
+    let div = L.DomUtil.create('div', 'info legend'),
+        const magnitudes = [0, 1, 2, 3, 4, 5],
+        const colors = [
+            "#98ee00",
+            "#d4ee00",
+            "#eecc00",
+            "#ee9c00",
+            "#ea822c",
+            "#ea2c2c" 
+        ];
+
+    // loop through our intervals and generate a label with a colored square for each interval
+    for (var i = 0; i < magnitudes.length; i++) {
+        console.log(colors[i]);
+        div.innerHTML +=
+            '<i style="background:' + colors[i] + '"></i> ' +
+            magnitudes[i] + (magnitudes[i + 1] ? '&ndash;' + magnitudes[i + 1] + '<br>' : '+');
+    }
+
+    return div;
+};
+
+legend.addTo(map);
